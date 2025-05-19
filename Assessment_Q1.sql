@@ -1,8 +1,12 @@
 USE adashi_staging;
 
 
-WITH multiple_products AS (SELECT s.owner_id, CONCAT(u.first_name, " ", u.last_name) customer_name, COUNT(CASE WHEN is_regular_savings = 1 THEN 1 END) savings_count, COUNT(CASE WHEN is_a_fund = 1 THEN 1 END) investment_count,
-ROUND((SUM(p.amount)/100), 2) total_deposits 
+WITH multiple_products AS 
+(SELECT s.owner_id, 
+		CONCAT(u.first_name, " ", u.last_name) customer_name, 
+        COUNT(CASE WHEN is_regular_savings = 1 THEN 1 END) savings_count, -- counts only values where the boolean column is_regular_savings is 1 (True)
+        COUNT(CASE WHEN is_a_fund = 1 THEN 1 END) investment_count, -- counts only values where the boolean column is_a_fund  is 1 (True)
+		ROUND((SUM(p.amount)/100), 2) total_deposits 
 FROM users_customuser u 
 JOIN savings_savingsaccount s 
 ON s.owner_id = u.id
